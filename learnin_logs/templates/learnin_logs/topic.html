@@ -2,6 +2,9 @@
 
 {% block content %}
     <p> Topic: {{topic}}</p>
+    <p>
+    <a href="{% url 'learnin_logs:new_entry' topic.id %}">Add new entry</a>
+    </p>
     <p> Entries: </p>
     <ul>
     {% for entry  in entries %}
