@@ -1,0 +1,16 @@
+{% extends 'learnin_logs/base.html' %}
+{% block content %}
+
+<p> <a href="{% url 'learnin_logs:topic' topic.id %}">{{topic}}</a></p> 
+<p>Eddit new entry:</p>
+
+<form action="{% url 'learnin_logs:edit_entry' entry.id %}" method='post'>
+  {% csrf_token %}
+        {{ form.as_p }}
+
+        <button name="submit"> Save Changes </button>
+</form>
+
+
+
+{% endblock content %}
