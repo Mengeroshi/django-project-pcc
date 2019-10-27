@@ -20,12 +20,12 @@ def topics(request):
 def topic(request, topic_id):
     """Show all topics"""
     topic = Topic.objects.get(id=topic_id)
+    #Make sure the topic belongs to the current user
+    check_topic_owner(topic, request)
+
     entries = topic.entry_set.order_by('-date_adedd')
     context = {'topic': topic, 'entries': entries}
     return render(request, 'learnin_logs/topic.html', context)
-    #Make sure the topic belongs to the current user
-    if topic.owner != request.user:
-        raise Http404
 
 @login_required
 def new_topic(request):
@@ -70,8 +70,7 @@ def edit_entry(request, entry_id):
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
 
-    if topic.owner != request.user:
-        raise Http404
+    check_topic_owner(topic, request)
 
     if request.method != 'POST':
         form = EntryForm(instance=entry)
@@ -83,3 +82,7 @@ def edit_entry(request, entry_id):
 
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learnin_logs/edit_entry.html', context)
+
+def check_topic_owner(topic, request):
+    if topic.owner != request.user:
+        raise Http404
