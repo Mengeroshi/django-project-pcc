@@ -21,7 +21,8 @@ def topic(request, topic_id):
     """Show all topics"""
     topic = get_object_or_404(Topic, id=topic_id)
     #Make sure the topic belongs to the current user
-    check_topic_owner(topic, request)
+    if topic.owner != request.user:
+        raise Http404
 
     entries = topic.entry_set.order_by('-date_adedd')
     context = {'topic': topic, 'entries': entries}
